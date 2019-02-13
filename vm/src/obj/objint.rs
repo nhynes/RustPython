@@ -289,7 +289,10 @@ fn int_add(vm: &mut VirtualMachine, args: PyFuncArgs) -> PyResult {
     );
     let i = BigInt::from_pyobj(_i);
     if objtype::isinstance(i2, &vm.ctx.int_type()) {
-        Ok(vm.ctx.new_int(i + get_value(i2)))
+        Ok(vm.ctx.new_int(i + match i2.borrow().payload {
+            PyObjectPayload::Integer { ref value } => value,
+            _ => panic!("the")
+        }))
     } else if objtype::isinstance(i2, &vm.ctx.float_type()) {
         Ok(vm
             .ctx
